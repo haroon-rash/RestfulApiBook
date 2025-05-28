@@ -1,6 +1,7 @@
 package org.example.resfulapi.restfulapibooks.Services;
 
 import org.example.resfulapi.restfulapibooks.DAO.BooksRepository;
+import org.example.resfulapi.restfulapibooks.Entities.Authors;
 import org.example.resfulapi.restfulapibooks.Entities.Books;
 import org.example.resfulapi.restfulapibooks.Exceptions.ResourceNotFound;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ b=bt.get();
 
     }
 
-public List<Books> searchBooks(String name,String author) {
+public List<Books> searchBooks(String name, Authors author) {
     try {
 
         if (name != null) {
