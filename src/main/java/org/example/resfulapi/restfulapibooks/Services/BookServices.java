@@ -22,7 +22,7 @@ public class BookServices {
         this.bRepository = bRepository;
     }
 
-    public List<Books> getAllBooks(){
+    public List<Books> getAllBooks() {
 
         List<Books> books = new ArrayList<>();
         bRepository.findAll().forEach(books::add);
@@ -31,36 +31,35 @@ public class BookServices {
     }
 
     public Books getBookById(Long id) {
-Books b=null;
-try {
+        Books b = null;
+        try {
 
 
-    Optional<Books> bt = bRepository.findById(id);
-b=bt.get();
-}catch (Exception e){
-    System.out.println(e.getMessage());
-}
-        return b ;
+            Optional<Books> bt = bRepository.findById(id);
+            b = bt.get();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return b;
 
     }
 
-public List<Books> searchBooks(String name, Authors author) {
-    try {
+    public List<Books> searchBooks(String name, Authors author) {
+        try {
 
-        if (name != null) {
-            return bRepository.findByTitle(name);
+            if (name != null) {
+                return bRepository.findByTitle(name);
+            }
+            if (author != null) {
+                return bRepository.findByAuthor(author);
+            }
+
+
+        } catch (Exception e) {
+            System.out.println("Error");
         }
-        if (author != null) {
-            return bRepository.findByAuthor(author);
-        }
-
-
-
-    } catch (Exception e) {
-        System.out.println("Error");
+        return new ArrayList<>();
     }
-    return new ArrayList<>();
-}
 
     // Service
     public void deleteBooks(Long id) {

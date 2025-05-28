@@ -1,6 +1,8 @@
 package org.example.resfulapi.restfulapibooks.BookController;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.resfulapi.restfulapibooks.Entities.Authors;
 import org.example.resfulapi.restfulapibooks.RestfulApiBooksApplication;
 import org.example.resfulapi.restfulapibooks.Services.BookServices;
@@ -17,79 +19,74 @@ import java.util.List;
 
 
 @RestController
+@Tag(name = "Book Controller", description = "This is a book Api")
 public class BookController {
 
-private final BookServices bookServices;
+    private final BookServices bookServices;
 
-public BookController(BookServices bservice) {
-    this.bookServices = bservice;
-}
-    // @RequestMapping(value = "/getbooks" ,method = RequestMethod.GET)
-    @GetMapping("/getbooks")
-    //this is alternative of @request mapping it GET show get method and Mapping
-    public String getBooks()
-    {
-
-        return "This is a book RESTful API";
+    public BookController(BookServices bservice) {
+        this.bookServices = bservice;
     }
+    // @RequestMapping(value = "/getbooks" ,method = RequestMethod.GET)
+
 
     @GetMapping("/books")
-    public ResponseEntity<?>getBook(){
+    @Operation(summary = "Get All Books")
+    public ResponseEntity<?> getBook() {
 
-    List<Books> b =bookServices.getAllBooks();
-    if(b.isEmpty()){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Books Found");
-    }
+        List<Books> b = bookServices.getAllBooks();
+        if (b.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Books Found");
+        }
 
         return ResponseEntity.ok(b);
     }
 
     @GetMapping("/search/{id}")
-    public ResponseEntity<?> searchBook(@PathVariable Long id){
+    @Operation(summary = "Search Book By Id")
+    public ResponseEntity<?> searchBook(@PathVariable Long id) {
 
 
+        Books book = bookServices.getBookById(id);
+        if (book == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book Not Found at id :  " + id);
 
-    Books book =bookServices.getBookById(id);
-if(book==null)
-    {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book Not Found at id :  "+id);
-
-    }
+        }
 
         return ResponseEntity.ok(book);
-
 
 
     }
 
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchBook(@RequestParam(required = false) String title,@RequestParam(required = false) Authors author){
+    @Operation(summary = "Search Book By Title Or Author")
+    public ResponseEntity<?> searchBook(@RequestParam(required = false) String title, @RequestParam(required = false) Authors author) {
 
-    List<Books> list=bookServices.searchBooks(title,author);
-    if(list.isEmpty())
+        List<Books> list = bookServices.searchBooks(title, author);
+        if (list.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book Not Found");
 
-    return ResponseEntity.ok("Book Found");
+        return ResponseEntity.ok("Book Found");
 
     }
 
-@DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteBook(@PathVariable Long id){
-    bookServices.deleteBooks(id);
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete Book By Id")
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+        bookServices.deleteBooks(id);
 
-    return ResponseEntity.ok("Book Deleted");
-}
-
-
-@PostMapping("/create")
-    public ResponseEntity<?> createBook(@RequestBody Books book){
-    bookServices.create(book);
-
-    return ResponseEntity.ok("Book Created");
-}
+        return ResponseEntity.ok("Book Deleted");
+    }
 
 
+    @PostMapping("/create")
+    @Operation(summary = "Create Book")
+    public ResponseEntity<?> createBook(@RequestBody Books book) {
+        bookServices.create(book);
+
+        return ResponseEntity.ok("Book Created");
+    }
 
 
 }
